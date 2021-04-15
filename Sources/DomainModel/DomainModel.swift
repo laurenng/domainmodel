@@ -84,6 +84,16 @@ public class Job {
         }
     }
     
+    func convert() {
+        switch self.type {
+            case .Hourly(let wage):
+                let newAmount: UInt = UInt(wage * 2000)
+                self.type = JobType.Salary(newAmount)
+            case .Salary(let salary):
+                self.type = JobType.Salary(salary)
+        }
+    }
+    
     public func raise(byAmount: Double = 0, byPercent: Double = 0) {
         if (byAmount != 0) {
             switch self.type {
