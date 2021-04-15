@@ -15,7 +15,7 @@ public struct Money {
     public var currency: String
 
     init(amount total: Int, currency type: String)  {
-        if (type == "USD" || type == "GBP" || type == "EUR" || type == "CAN") {
+        if (total > 0 && (type == "USD" || type == "GBP" || type == "EUR" || type == "CAN")) {
             amount = total
             currency = type
         } else {
@@ -27,21 +27,23 @@ public struct Money {
     private let exchangeRate = ["GBP": 0.5, "EUR": 1.5, "CAN": 1.25, "USD": 1.0]
     
     public func convert(_ to: String) -> Money {
-        if (self.currency == to) {
-            return self
-        }
-        
         var value: Money = Money(amount: 0, currency: "USD")
-        var currentValue: Double = Double(self.amount)
-        
-        currentValue = Double(currentValue / exchangeRate[self.currency]!)
-        currentValue = Double(currentValue * exchangeRate[to]!)
-        
-       
-        
-        value.amount = Int(round(currentValue))
-        value.currency = to
-        return value
+        if (to == "USD" || to == "GBP" || to == "EUR" || to == "CAN") {
+            if (self.currency == to) {
+                return self
+            }
+            
+            var currentValue: Double = Double(self.amount)
+            
+            currentValue = Double(currentValue / exchangeRate[self.currency]!)
+            currentValue = Double(currentValue * exchangeRate[to]!)
+            
+            value.amount = Int(round(currentValue))
+            value.currency = to
+            return value
+        } else {
+            return value
+        }
     }
 
     public func add(_ to: Money) -> Money {

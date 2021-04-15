@@ -80,6 +80,63 @@ class MoneyTests: XCTestCase {
     XCTAssert(total.amount == 10)
     XCTAssert(total.currency == "GBP")
   }
+  
+    func testCurrency() {
+        let wrongValue = Money(amount: 10, currency: "CHNA")
+        XCTAssert(wrongValue.amount == 0)
+        XCTAssert(wrongValue.currency == "USD")
+    }
+    
+    func testNegativeAmount() {
+        let wrongValue = Money(amount: -10, currency: "GBP")
+        XCTAssert(wrongValue.amount == 0)
+        XCTAssert(wrongValue.currency == "USD")
+    }
+    
+    func testSubtractUSDtoUSD() {
+      let tenUSD = Money(amount: 10, currency: "USD")
+      let twelveUSD = Money(amount: 12, currency: "USD")
+      let total = tenUSD.subtract(twelveUSD)
+      XCTAssert(total.amount == 2)
+      XCTAssert(total.currency == "USD")
+    }
+    
+    func testSubtractNegativeUSDtoUSD() {
+      let tenUSD = Money(amount: 10, currency: "USD")
+      let twelveUSD = Money(amount: 12, currency: "USD")
+      let total = twelveUSD.subtract(tenUSD)
+      XCTAssert(total.amount == 0)
+      XCTAssert(total.currency == "USD")
+    }
+    
+    func testSubtractBadMoney() {
+      let tenUSD = Money(amount: 10, currency: "USD")
+      let twelveUSD = Money(amount: -12, currency: "USD")
+        let total = twelveUSD.subtract(tenUSD)
+      XCTAssert(total.amount == 10)
+      XCTAssert(total.currency == "USD")
+    }
+    
+    func testSubtractBadMoney2() {
+      let tenUSD = Money(amount: -10, currency: "USD")
+      let twelveUSD = Money(amount: -12, currency: "USD")
+        let total = twelveUSD.subtract(tenUSD)
+      XCTAssert(total.amount == 0)
+      XCTAssert(total.currency == "USD")
+    }
+    
+    func testConvertWrong() {
+        let can = twelveUSD.convert("CHINA")
+        XCTAssert(can.amount == 0)
+        XCTAssert(can.currency == "USD")
+    }
+    
+    func testConvertWrong2() {
+        let can = twelveUSD.convert("can")
+        XCTAssert(can.amount == 0)
+        XCTAssert(can.currency == "USD")
+    }
+
 
     static var allTests = [
         ("testCanICreateMoney", testCanICreateMoney),
@@ -96,6 +153,15 @@ class MoneyTests: XCTestCase {
         
         ("testAddUSDtoUSD", testAddUSDtoUSD),
         ("testAddUSDtoGBP", testAddUSDtoGBP),
+        
+        ("EC-incorrectCurrency", testCurrency),
+        ("EC-negativeAmountValue", testNegativeAmount),
+        ("EC-subtractUSDtoUSD", testSubtractUSDtoUSD),
+        ("EC-subtractNegativeUSDtoUSD", testSubtractNegativeUSDtoUSD),
+        ("EC-testSubtractBadMoney", testSubtractBadMoney),
+        ("EC-testSubtractBadMoney2", testSubtractBadMoney2),
+        ("EC-testConvertWßrong", testConvertWrong),
+        ("EC-testConvertWrong2", testConvertWrong2),
     ]
 }
 
